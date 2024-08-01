@@ -1,9 +1,4 @@
 allow-prefix:
-  - "[Infra]"
   - "[CI/CD]"
-  - "[iOS]"
-  - "[go/users]"
-  - "[go/notification]"
-  - "[go/tweets]"
-  - "[go/posts]"
-  - "[TS]"
+  - "[Posts]"
+  - "[Users]"
