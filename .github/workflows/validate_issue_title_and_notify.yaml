@@ -3,8 +3,6 @@ name: Issue Title Check
 on:
   issues:
     types: [opened, edited]
-  repository_dispatch:
-    types: [issue_created]
 
 jobs:
   check_title:
@@ -28,34 +26,17 @@ jobs:
         script: |
           const fs = require('fs');
           const yaml = require('js-yaml');
-
-          let issue_number;
-
-          if (context.payload.client_payload) {
-            issue_number = context.payload.client_payload.issue_number;
-          } else {
-            issue_number = context.issue.number;
-          }
-
-          console.log(`Issue number: ${issue_number}`);
-          const issue = await github.rest.issues.get({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: issue_number,
-          });
-
-          const title = issue.data.title;
+          const title = context.payload.issue.title;
           console.log(`Issue title: ${title}`);
           if (title.endsWith('.')) {
             console.log("Issue title ends with a period. Removing the period.");
             github.rest.issues.createComment({
-              issue_number: issue_number,
+              issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: "Issue title ends with a period. Removing the period."
             });
           }
-
           let data;
           try {
             const fileContents = fs.readFileSync('hack/prefix.yaml', 'utf8');
@@ -64,21 +45,30 @@ jobs:
             console.log(`Error reading or parsing config.yml: ${e.message}`);
             throw e;
           }
-
           const prefix = data['allow-prefix'];
           if (prefix) {
+            let matches = false;
             for (let i = 0; i < prefix.length; i++) {
               if (title.startsWith(prefix[i])) {
                 console.log("Title matches the allowed prefix.");
-                return;
+                matches = true;
+                break;
               }
             }
+            if (!matches) {
+              console.log("Title does not match any allowed prefix. Creating a comment.");
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `You should add the correct prefix to the issue title. Allowed prefixes: ${prefix}.`
+              });
+              return;
+            }
           }
-
-          console.log("Title does not match any allowed prefix. Creating a comment.");
           github.rest.issues.createComment({
-            issue_number: issue_number,
+            issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: `You should add the correct prefix to the issue title. Allowed prefixes: ${prefix}.`
+            body: "Issue title validation succeeded."
           });
