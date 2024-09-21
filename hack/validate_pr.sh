@@ -6,8 +6,8 @@ showError() {
     echo "$textred Error: $message" >&2
 }
 
-OWNER_NAME='okuda-seminar'
-REPO_NAME='Twitter-Clone'
+OWNER_NAME='Rwatana'
+REPO_NAME='github-action-practice'
 
 if [ -z "$HEAD" ]; then
     HEAD=$(git rev-parse --abbrev-ref HEAD)
@@ -24,7 +24,7 @@ if [ "$commit_count" != 1 ]; then
     exit 1
 fi
 commit_sha=$(echo "${commit_list}" | jq -r '.[0].commits[0].oid')
-commit_message=$(gh api repos/okuda-seminar/Twitter-Clone/commits/$commit_sha | jq -r '.commit.message')
+commit_message=$(gh api repos/Rwatana/github-action-practice/commits/$commit_sha | jq -r '.commit.message')
 echo "Commit Message: $commit_message"
 escaped=$(printf '%s' "$pr_title" | sed 's/[\[\.*^$/]/\\&/g')
 pattern="^${escaped}.*\.$"
