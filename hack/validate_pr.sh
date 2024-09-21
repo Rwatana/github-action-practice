@@ -7,7 +7,7 @@ showError() {
 }
 
 OWNER_NAME='Rwatana'
-REPO_NAME='github-actions-practice'
+REPO_NAME='github-action-practice'
 
 if [ -z "$HEAD" ]; then
     HEAD=$(git rev-parse --abbrev-ref HEAD)
