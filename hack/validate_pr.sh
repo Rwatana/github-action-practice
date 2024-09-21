@@ -6,8 +6,8 @@ showError() {
     echo "$textred Error: $message" >&2
 }
 
-OWNER_NAME='okuda-seminar'
-REPO_NAME='Twitter-Clone'
+OWNER_NAME='Rwatana'
+REPO_NAME='github-action-practice'
 
 if [ -z "$HEAD" ]; then
     HEAD=$(git rev-parse --abbrev-ref HEAD)
