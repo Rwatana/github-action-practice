@@ -2,3 +2,5 @@ allow-prefix:
   - "[CI/CD]"
   - "[Posts]"
   - "[Users]"
+  - "[Go]"
+  - "[Python]"
