@@ -1,0 +1,3 @@
+mode: set
+github-action/main.go:6.24,8.2 1 1
+github-action/main.go:10.13,12.2 1 0
